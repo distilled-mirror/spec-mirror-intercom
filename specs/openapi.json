@@ -10356,7 +10356,7 @@
           "Companies"
         ],
         "operationId": "deleteCompany",
-        "description": "Delete a single company.\n\nThis endpoint does not permanently remove the company. It archives the company record and detaches any contacts attached to it; the contacts themselves are not deleted. A `company.deleted` webhook is sent once archival completes.\n\nThe endpoint returns `200` with `\"deleted\": true` as soon as the request is accepted — archival is processed asynchronously.\n\n{% admonition type=\"warning\" %}\nThird-party integrations that sync companies into Intercom (for example, Salesforce or Chargebee) will recreate any company deleted through this endpoint on their next sync. To prevent recreation, remove or filter the company at the source integration before deleting it via the API.\n{% /admonition %}\n",
+        "description": "Delete a single company.\n\nThe company record is kept in your workspace, but all contacts are detached. The contacts themselves are not deleted. Detaching contacts is permanent and can't be reversed. A `company.deleted` webhook is sent when the company is deleted. These changes may take some time to be reflected in your workspace.\n\n{% admonition type=\"warning\" %}\nThird-party integrations that sync companies into Intercom (for example, Salesforce or Chargebee) will recreate any company deleted through this endpoint on their next sync. To prevent recreation, remove or filter the company at the source integration before deleting it via the API.\n{% /admonition %}\n",
         "responses": {
           "200": {
             "description": "Successful",
@@ -39887,7 +39887,7 @@
           "email_verified": {
             "type": "boolean",
             "nullable": true,
-            "description": "Whether the contact has proved they own this email address, for example by completing a confirmation link or one-time code you sent to it. Send `email_verified` in the same request as `email`, for example `{\"email\": \"jane@example.com\", \"email_verified\": true}`. A request that includes `email_verified` without `email` fails with a `400`.\n\n- `true`: ownership is proved.\n- `false`: ownership is not proved.\n- Omitted: the current verification status stays the same.\n\nNew contacts start unverified. If you change a verified contact's email, the new address is unverified until you verify it. Only send `true` when you have that proof. When an inbound email, outbound conversation, or ticket matches a verified address, Intercom reuses that lead instead of creating a new one.",
+            "description": "Whether the contact has proved they own this email address, for example through a confirmation link or one-time code you sent. Send it together with `email`. `email_verified` without `email` is rejected.\n\nChanging a contact's email resets it to not verified. Intercom reuses leads with a verified email when an inbound email, conversation or ticket matches the address.",
             "example": true
           },
           "email": {
@@ -44506,6 +44506,46 @@
                 "format": "date-time",
                 "description": "The timestamp the message was created at, with millisecond precision.",
                 "example": "2025-01-24T09:01:00.456Z"
+              },
+              "sources": {
+                "type": "array",
+                "description": "The content sources Fin used to generate this reply, in the same order as the\n[n] citation markers in the body. Present only when Fin cited content.\n",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the source.",
+                      "example": "Managing your account"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "article",
+                        "external"
+                      ],
+                      "description": "Whether the source is an Intercom article or external content.",
+                      "example": "article"
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "The URL of the source.",
+                      "example": "https://www.example.com/help/en/articles/1-managing-your-account"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "type",
+                    "url"
+                  ]
+                },
+                "example": [
+                  {
+                    "title": "Managing your account",
+                    "type": "article",
+                    "url": "https://www.example.com/help/en/articles/1-managing-your-account"
+                  }
+                ]
               }
             },
             "required": [
@@ -48520,7 +48560,7 @@
           "email_verified": {
             "type": "boolean",
             "nullable": true,
-            "description": "Whether the contact has proved they own this email address, for example by completing a confirmation link or one-time code you sent to it. Send `email_verified` in the same request as `email`, for example `{\"email\": \"jane@example.com\", \"email_verified\": true}`. A request that includes `email_verified` without `email` fails with a `400`.\n\n- `true`: ownership is proved.\n- `false`: ownership is not proved.\n- Omitted: the current verification status stays the same.\n\nNew contacts start unverified. If you change a verified contact's email, the new address is unverified until you verify it. Only send `true` when you have that proof. When an inbound email, outbound conversation, or ticket matches a verified address, Intercom reuses that lead instead of creating a new one.",
+            "description": "Whether the contact has proved they own this email address, for example through a confirmation link or one-time code you sent. Send it together with `email`. `email_verified` without `email` is rejected.\n\nChanging a contact's email resets it to not verified. Intercom reuses leads with a verified email when an inbound email, conversation or ticket matches the address.",
             "example": true
           },
           "phone": {
