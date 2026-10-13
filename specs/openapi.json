@@ -1146,6 +1146,7 @@
                         "help_center_settings_change",
                         "inbound_conversations_change",
                         "inbox_access_change",
+                        "inbox_bulk_action",
                         "message_deletion",
                         "message_state_change",
                         "messenger_look_and_feel_change",
@@ -30103,7 +30104,8 @@
                     "ticket_attributes": {
                       "_default_title_": "example",
                       "_default_description_": "there is a problem"
-                    }
+                    },
+                    "channel": "email"
                   }
                 }
               }
@@ -30159,7 +30161,8 @@
                     "ticket_attributes": {
                       "_default_title_": "example",
                       "_default_description_": "there is a problem"
-                    }
+                    },
+                    "channel": "email"
                   }
                 }
               }
@@ -30806,7 +30809,8 @@
                         "has_more": false
                       },
                       "category": "Back-office",
-                      "is_shared": false
+                      "is_shared": false,
+                      "channel": "messenger"
                     }
                   }
                 },
@@ -32397,6 +32401,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ai_call_response"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -33058,6 +33072,7 @@
               "help_center_settings_change",
               "inbound_conversations_change",
               "inbox_access_change",
+              "inbox_bulk_action",
               "macro_creation",
               "macro_deletion",
               "macro_update",
@@ -33229,13 +33244,13 @@
           "previous_state": {
             "type": "string",
             "nullable": true,
-            "description": "The state before the change. `idle` or `occupied`, and null when the Admin had not been classified yet.",
+            "description": "The state before the change. `idle` or `occupied` for an occupancy change, and null when the Admin had not been classified yet; `enabled` or `disabled` for an IP allowlist change.",
             "example": "idle"
           },
           "new_state": {
             "type": "string",
             "nullable": true,
-            "description": "The state after the change. `idle` or `occupied`.",
+            "description": "The state after the change. `idle` or `occupied` for an occupancy change; `enabled` or `disabled` for an IP allowlist change.",
             "example": "occupied"
           },
           "threshold_minutes": {
@@ -33967,6 +33982,14 @@
               "type": "object"
             },
             "example": []
+          },
+          "data": {
+            "type": "object",
+            "description": "The metadata object supplied when the call was registered, returned verbatim. Empty object when none was supplied.",
+            "example": {
+              "masterContactID": "abc123",
+              "DNIS": "+18005551212"
+            }
           }
         }
       },
@@ -40896,6 +40919,14 @@
                 "example": "8"
               }
             }
+          },
+          "channel": {
+            "type": "string",
+            "description": "The channel for the ticket. Only supported for customer ticket types. Defaults to messenger if not provided.",
+            "enum": [
+              "email"
+            ],
+            "example": "email"
           }
         },
         "required": [
@@ -47379,6 +47410,12 @@
             ],
             "example": "Customer"
           },
+          "channel": {
+            "type": "string",
+            "nullable": true,
+            "description": "The channel the ticket was created through. Defaults to messenger when no channel is specified at creation.",
+            "example": "messenger"
+          },
           "ticket_attributes": {
             "$ref": "#/components/schemas/ticket_custom_attributes"
           },
@@ -49805,7 +49842,7 @@
     },
     {
       "name": "Fin Agent",
-      "description": "Access Fin programmatically via the Fin Agent API endpoints.\n\n&nbsp;\n\n{% admonition type=\"warning\" %}\nTo request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.\n{% /admonition %}\n\n&nbsp;\n\nIntegration centres on the Fin Agent API endpoints — start a conversation with `/fin/start` and continue it with `/fin/reply`, or drive Fin from your own agent with `/fin/capabilities`, `/fin/ask`, `/fin/procedures/{procedure_id}/run`, and `/fin/escalate` — plus a set of events that notify your application of Fin's status and responses. Events can be delivered via webhooks or Server-Sent Events (SSE). You can also record a customer satisfaction rating with `/fin/csat`.\n\n&nbsp;\n\n**Events**\n\nConfigure a webhook endpoint in the Fin Agent API settings to receive events, or use the `sse_subscription_url` from the API response to subscribe via SSE. See the [setup guide](/docs/guides/fin-agent-api/setup) for configuration details.\n\n- `fin_status_updated` - Fired when Fin's status changes (awaiting_user_reply, escalated, resolved, complete)\n- `fin_replied` - Fired when Fin sends a reply to the user\n- `fin_reply_chunk` - SSE-only streaming event fired during reply generation (requires streaming enabled)\n- `csat_requested` - Fired when Fin asks the user to rate the conversation (submit the choice with `POST /fin/csat`)\n\nAll webhook requests include an `X-Fin-Agent-API-Webhook-Signature` header for request validation.\n"
+      "description": "Access Fin programmatically via the Fin Agent API endpoints.\n\n&nbsp;\n\n{% admonition type=\"warning\" %}\nTo request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.\n{% /admonition %}\n\n&nbsp;\n\n{% admonition type=\"warning\" %}\nServer-Sent Events (SSE) is available by application only. Contact your account team or Customer Support to request access.\n{% /admonition %}\n\n&nbsp;\n\nIntegration centres on the Fin Agent API endpoints — start a conversation with `/fin/start` and continue it with `/fin/reply`, or drive Fin from your own agent with `/fin/capabilities`, `/fin/ask`, `/fin/procedures/{procedure_id}/run`, and `/fin/escalate` — plus a set of events that notify your application of Fin's status and responses. Events can be delivered via webhooks or Server-Sent Events (SSE). You can also record a customer satisfaction rating with `/fin/csat`.\n\n&nbsp;\n\n**Events**\n\nConfigure a webhook endpoint in the Fin Agent API settings to receive events, or use the `sse_subscription_url` from the API response to subscribe via SSE. See the [setup guide](/docs/guides/fin-agent-api/setup) for configuration details.\n\n- `fin_status_updated` - Fired when Fin's status changes (awaiting_user_reply, escalated, resolved, complete)\n- `fin_replied` - Fired when Fin sends a reply to the user\n- `fin_reply_chunk` - SSE-only streaming event fired during reply generation (requires streaming enabled)\n- `csat_requested` - Fired when Fin asks the user to rate the conversation (submit the choice with `POST /fin/csat`)\n\nAll webhook requests include an `X-Fin-Agent-API-Webhook-Signature` header for request validation.\n"
     },
     {
       "name": "Help Center",
