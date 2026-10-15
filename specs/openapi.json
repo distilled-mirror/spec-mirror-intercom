@@ -6425,7 +6425,7 @@
                   "Conversation not found": {
                     "value": {
                       "errors": {
-                        "external_conversation_id": "Conversation not found for the given external_conversation_id"
+                        "conversation_id": "Conversation not found for the given conversation_id"
                       }
                     }
                   },
@@ -39103,13 +39103,14 @@
           "name": {
             "type": "string",
             "nullable": true,
-            "description": "The name of the author",
+            "description": "The name of the author. `null` if the author is a contact that has since been archived or deleted.",
             "example": "Operator"
           },
           "email": {
             "type": "string",
             "format": "email",
-            "description": "The email of the author",
+            "nullable": true,
+            "description": "The email of the author. `null` if the author is a contact that has since been archived or deleted.",
             "example": "operator+abcd1234@intercom.io"
           },
           "from_ai_agent": {
