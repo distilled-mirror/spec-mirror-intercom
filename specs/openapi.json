@@ -24399,7 +24399,7 @@
           "Messages"
         ],
         "operationId": "createMessage",
-        "description": "You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or whatsapp.\n\n> 🚧 Sending for visitors\n>\n> There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.\n\nThis will return the Message model that has been created.\n\n> 🚧 Retrieving Associated Conversations\n>\n> As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.\n",
+        "description": "You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or whatsapp.\n\n> 🚧 Sending for visitors\n>\n> There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.\n\nThis will return the Message model that has been created.\n\n> 🚧 Retrieving Associated Conversations\n>\n> As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.\n\n{% admonition type=\"warning\" name=\"Messages from contacts\" %}\n`from` should be an admin. A request with a user or lead as `from` is not rejected: it creates a conversation initiated by that contact, as the Create a conversation endpoint (`POST /conversations`) does, and the `to`, `cc` and `bcc` fields are ignored. To create a conversation initiated by a contact, use `POST /conversations`.\n{% /admonition %}\n",
         "responses": {
           "200": {
             "description": "admin message created",
@@ -30039,7 +30039,8 @@
                         "has_more": false
                       },
                       "category": "Back-office",
-                      "is_shared": false
+                      "is_shared": false,
+                      "channel": "messenger"
                     }
                   }
                 },
