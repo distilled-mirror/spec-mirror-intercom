@@ -17546,7 +17546,7 @@
             "name": "include_monitors",
             "in": "query",
             "required": false,
-            "description": "If set to true, the response will include a `monitor_evaluations` array on each conversation with any QA monitor results that flagged it.",
+            "description": "If set to true, the response will include a `monitor_evaluations` array on each conversation with the latest QA monitor evaluation for each monitor that has evaluated it.",
             "example": true,
             "schema": {
               "type": "boolean",
@@ -38292,7 +38292,7 @@
           },
           "monitor_evaluations": {
             "type": "array",
-            "description": "QA monitor evaluations that flagged this conversation. Only included when `include_monitors=true` is passed as a query parameter.",
+            "description": "The latest QA monitor evaluation for each monitor that has evaluated this conversation, whatever its result. Only included when `include_monitors=true` is passed as a query parameter.",
             "items": {
               "$ref": "#/components/schemas/conversation_monitor_evaluation"
             }
@@ -38483,7 +38483,7 @@
           },
           "monitor_evaluations": {
             "type": "array",
-            "description": "QA monitor evaluations that flagged this conversation. Only included when `include_monitors=true` is passed as a query parameter.",
+            "description": "The latest QA monitor evaluation for each monitor that has evaluated this conversation, whatever its result. Only included when `include_monitors=true` is passed as a query parameter.",
             "items": {
               "$ref": "#/components/schemas/conversation_monitor_evaluation"
             }
@@ -38561,7 +38561,7 @@
         "x-tags": [
           "Conversations"
         ],
-        "description": "A QA monitor evaluation that flagged this conversation. Returned in the `monitor_evaluations` array on conversation responses when `include_monitors=true` is passed.",
+        "description": "A QA monitor evaluation of this conversation. Returned in the `monitor_evaluations` array on conversation responses when `include_monitors=true` is passed.",
         "properties": {
           "monitor_id": {
             "type": "string",
@@ -38582,8 +38582,8 @@
           },
           "result": {
             "type": "string",
-            "description": "The evaluation outcome reported by the monitor.",
-            "example": "flagged"
+            "description": "The evaluation outcome reported by the monitor: `included` (the conversation matches the monitor's criteria), `excluded`, `error` or `awaiting_async_data`.",
+            "example": "included"
           },
           "explanation": {
             "type": "string",
@@ -39030,7 +39030,7 @@
           "translations": {
             "type": "object",
             "nullable": true,
-            "description": "A map of the reply text keyed by locale code. Backs the `conversation.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in; every other key holds the reply translated into that locale.",
+            "description": "A map of the reply text keyed by locale code. Backs the `conversation.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in, when it is known; every other key holds the reply translated into that locale.",
             "properties": {
               "original": {
                 "type": "string",
@@ -39041,9 +39041,6 @@
             "additionalProperties": {
               "type": "string"
             },
-            "required": [
-              "original"
-            ],
             "example": {
               "original": "en",
               "en": "<p>Hello</p>",
@@ -47591,7 +47588,7 @@
           "translations": {
             "type": "object",
             "nullable": true,
-            "description": "A map of the reply text keyed by locale code. Backs the `ticket.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in; every other key holds the reply translated into that locale.",
+            "description": "A map of the reply text keyed by locale code. Backs the `ticket.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in, when it is known; every other key holds the reply translated into that locale.",
             "properties": {
               "original": {
                 "type": "string",
@@ -47602,9 +47599,6 @@
             "additionalProperties": {
               "type": "string"
             },
-            "required": [
-              "original"
-            ],
             "example": {
               "original": "en",
               "en": "<p>Hello</p>",
@@ -47840,7 +47834,7 @@
           "translations": {
             "type": "object",
             "nullable": true,
-            "description": "A map of the reply text keyed by locale code. Backs the `ticket.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in; every other key holds the reply translated into that locale.",
+            "description": "A map of the reply text keyed by locale code. Backs the `ticket.admin.replied.translated` webhook topic. `original` holds the locale code the reply was written in, when it is known; every other key holds the reply translated into that locale.",
             "properties": {
               "original": {
                 "type": "string",
@@ -47851,9 +47845,6 @@
             "additionalProperties": {
               "type": "string"
             },
-            "required": [
-              "original"
-            ],
             "example": {
               "original": "en",
               "en": "<p>Hello</p>",
