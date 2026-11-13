@@ -3707,7 +3707,7 @@
           "Articles"
         ],
         "operationId": "retrieveArticleDraft",
-        "description": "Fetch the staged draft of a published article by making a GET request to\n`https://api.intercom.io/articles/<id>/draft`. The response is the article\nrendered with its draft content, leaving the live article untouched.\n\nA draft exists only when a published article has unpublished changes staged\non top of it. Returns `404` when the article has no staged draft.\n\nRequires the `read_articles_scope` OAuth scope.\n",
+        "description": "Fetch the staged draft of a published article by making a GET request to\n`https://api.intercom.io/articles/<id>/draft`. The response is the article\nrendered with its draft content, leaving the live article untouched.\n\nA draft exists only when a published article has unpublished changes staged\non top of it. Returns `404` when the article has no staged draft.\n\nRequires the `read_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Article draft found",
@@ -3776,7 +3776,7 @@
           "Articles"
         ],
         "operationId": "stageArticleDraft",
-        "description": "Stage changes to a published article as a draft by making a PUT request to\n`https://api.intercom.io/articles/<id>/draft`. The live article remains\nunchanged until the draft is published.\n\nThe article must already be published; staging a draft on an article that\nhas never been published returns `422`.\n\nOnly versioned text content (such as `title` and `body`) is staged.\nNon-versioned fields like AI availability are ignored, leaving the live\nvalues untouched.\n\nRequires the `read_write_articles_scope` OAuth scope.\n",
+        "description": "Stage changes to a published article as a draft by making a PUT request to\n`https://api.intercom.io/articles/<id>/draft`. The live article remains\nunchanged until the draft is published.\n\nThe article must already be published; staging a draft on an article that\nhas never been published returns `422`.\n\nOnly versioned text content (such as `title` and `body`) is staged.\nNon-versioned fields like AI availability are ignored, leaving the live\nvalues untouched.\n\nRequires the `read_write_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Draft staged",
@@ -3889,7 +3889,7 @@
           "Articles"
         ],
         "operationId": "publishArticleDraft",
-        "description": "Publish a staged draft by making a POST request to\n`https://api.intercom.io/articles/<id>/draft/publish`, promoting the draft\ncontent to live.\n\nOn a single-language workspace no body is required. On a multilingual\nworkspace you must list which locales to publish via the `locales` array;\nomitting it returns `422`. Returns `422` when there is no staged draft to\npublish, or when a requested locale has no pending changes.\n\nRequires the `read_write_articles_scope` OAuth scope.\n",
+        "description": "Publish a staged draft by making a POST request to\n`https://api.intercom.io/articles/<id>/draft/publish`, promoting the draft\ncontent to live.\n\nOn a single-language workspace no body is required. On a multilingual\nworkspace you must list which locales to publish via the `locales` array;\nomitting it returns `422`. Returns `422` when there is no staged draft to\npublish, or when a requested locale has no pending changes.\n\nRequires the `read_write_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Draft published",
@@ -4030,7 +4030,7 @@
           }
         ],
         "operationId": "attachTagToArticle",
-        "description": "Apply an existing tag to an article. Returns the tag that was applied.\n\nThe tag must already exist in the workspace (create tags with the Tags API),\nand the authenticating teammate must have the `manage_knowledge_base_content`\npermission.\n\nRequires the `read_write_articles_scope` OAuth scope.\n",
+        "description": "Apply an existing tag to an article. Returns the tag that was applied.\n\nThe tag must already exist in the workspace (create tags with the Tags API),\nand the authenticating teammate must have the `manage_knowledge_base_content`\npermission.\n\nRequires the `read_write_articles_scope` or `create_update_articles` OAuth scope.\n",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4192,7 +4192,7 @@
           }
         ],
         "operationId": "detachTagFromArticle",
-        "description": "Remove a tag from an article. Returns the tag that was removed, with null\n`applied_at` and `applied_by`.\n\nThe authenticating teammate must have the `manage_knowledge_base_content`\npermission.\n\nRequires the `read_write_articles_scope` OAuth scope.\n",
+        "description": "Remove a tag from an article. Returns the tag that was removed, with null\n`applied_at` and `applied_by`.\n\nThe authenticating teammate must have the `manage_knowledge_base_content`\npermission.\n\nRequires the `read_write_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Tag removed",
@@ -4337,7 +4337,7 @@
           "Articles"
         ],
         "operationId": "listArticleVersions",
-        "description": "Fetch the version history of an article by making a GET request to\n`https://api.intercom.io/articles/<article_id>/versions`. Versions are\nreturned newest-first as a paginated list of metadata. Use\n`GET /articles/{article_id}/versions/{id}` to retrieve a single version\nwith its full content.\n\nRequires the `read_articles_scope` OAuth scope.\n",
+        "description": "Fetch the version history of an article by making a GET request to\n`https://api.intercom.io/articles/<article_id>/versions`. Versions are\nreturned newest-first as a paginated list of metadata. Use\n`GET /articles/{article_id}/versions/{id}` to retrieve a single version\nwith its full content.\n\nRequires the `read_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Versions found",
@@ -4470,7 +4470,7 @@
           "Articles"
         ],
         "operationId": "retrieveArticleVersion",
-        "description": "Fetch a single prior version of an article, including its body content,\nby making a GET request to\n`https://api.intercom.io/articles/<article_id>/versions/<id>`. Returns\nthe version's full content; the live article remains untouched.\n\nRequires the `read_articles_scope` OAuth scope.\n",
+        "description": "Fetch a single prior version of an article, including its body content,\nby making a GET request to\n`https://api.intercom.io/articles/<article_id>/versions/<id>`. Returns\nthe version's full content; the live article remains untouched.\n\nRequires the `read_articles_scope` or `create_update_articles` OAuth scope.\n",
         "responses": {
           "200": {
             "description": "Version found",
