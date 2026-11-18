@@ -23964,7 +23964,7 @@
             "name": "include_bodies",
             "in": "query",
             "required": false,
-            "description": "Include request/response bodies in the response (default false).",
+            "description": "Include request/response bodies in the response (default false). Ignored for third-party apps (apps owned by another workspace), which never receive bodies.",
             "schema": {
               "type": "string",
               "enum": [
@@ -23978,7 +23978,7 @@
           "Data Connectors"
         ],
         "operationId": "listDataConnectorExecutionResults",
-        "description": "Retrieve paginated execution logs for a specific data connector.\nResults from the last hour are returned by default. Use `start_ts` and `end_ts` to customize the time range.\n\nRequest/response bodies are excluded by default. Use `include_bodies=true` to include them.\n",
+        "description": "Retrieve paginated execution logs for a specific data connector.\nResults from the last hour are returned by default. Use `start_ts` and `end_ts` to customize the time range.\n\nRequest/response bodies are excluded by default. Use `include_bodies=true` to include them. Apps owned by another workspace never receive them.\n",
         "responses": {
           "200": {
             "description": "successful",
@@ -24155,7 +24155,7 @@
           "Data Connectors"
         ],
         "operationId": "showDataConnectorExecutionResult",
-        "description": "Retrieve details for a specific data connector execution result.\nAlways includes request/response bodies and the sanitised request URL.\n",
+        "description": "Retrieve details for a specific data connector execution result.\nIncludes the sanitised request URL, and the request/response bodies unless the request comes from a third-party app (an app owned by another workspace).\n",
         "responses": {
           "200": {
             "description": "successful",
@@ -24682,7 +24682,7 @@
           "Data Export"
         ],
         "operationId": "downloadDataExport",
-        "description": "When a job has a status of complete, and thus a filled download_url, you can download your data by hitting that provided URL, formatted like so: https://api.intercom.io/download/content/data/xyz1234.\n\nYour exported message data will be streamed continuously back down to you in a gzipped CSV format.\n\n> 📘 Octet header required\n>\n> You will have to specify the header Accept: `application/octet-stream` when hitting this endpoint.\n",
+        "description": "When a job has a status of complete, and thus a filled download_url, you can download your data by hitting that provided URL, formatted like so: https://api.intercom.io/download/content/data/xyz1234.\n\nYour exported message data is returned as a ZIP archive containing one CSV file per data group. The response is sent with the header `Content-Encoding: zip`.\n\n> 📘 Octet header required\n>\n> You will have to specify the header Accept: `application/octet-stream` when hitting this endpoint.\n",
         "responses": {
           "200": {
             "description": "successful"
