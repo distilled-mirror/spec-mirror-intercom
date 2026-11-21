@@ -40930,8 +40930,7 @@
                 "type": "string",
                 "enum": [
                   "lead",
-                  "user",
-                  "contact"
+                  "user"
                 ],
                 "description": "The role associated to the contact - user or lead.",
                 "example": "user"
